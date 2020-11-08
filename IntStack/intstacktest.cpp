@@ -2,6 +2,14 @@
 #include "intstack.h"
 
 void test () {
+  try{
+    IntStack st (-2);
+    st.print();
+  }
+  catch(const char* err){
+    std::cout << err << std::endl;
+  }
+  
   IntStack st (3);
   st.print(); // [ [
 
@@ -14,8 +22,13 @@ void test () {
   st.push(36);
   st.print(); // [ 81 52 36 [
 
-  st.push(80);
-  st.print(); // Là il y a erreur !
+  try{  
+    st.push(80);
+    st.print(); // Là il y a erreur !
+  }
+  catch(const char* err){
+    std::cout << err << std::endl;
+  }
 
   std :: cout << st.pop () << std::endl; // 36
   st.print (); // [ 81 52 [
@@ -26,9 +39,18 @@ void test () {
   std :: cout << st.pop () << std::endl; // 81
   st.print(); // [ [
 
-  std :: cout << st.pop () << std::endl; // Là aussi il y a erreur !
-  st.print(); // [ [
+  try{
+    std :: cout << st.pop () << std::endl; // Là aussi il y a erreur !
+    st.print(); // [ [
+  }
+  catch(const char* err){
+    std::cout << err << std::endl;
+  }
 }
+
+
+
+
 
 int main () {
   test();

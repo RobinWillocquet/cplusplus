@@ -2,36 +2,32 @@
 class IntStack {
 
 public: 
-  IntStack (int s) : size(s), tab(new int [size]), top(0){
+  IntStack (int s) : size(s), top(0){
+    if(size>0){
+      tab = new int[size];
+    }
+    else{
+      throw "ERREUR : la taille de la pile est interdite";
+    }
   }
 
   void push (int element) {
-      try{
-        if (is_full()){
-          throw "ERREUR : la pile est pleine, impossible de push !";
-        }
-        else{
-          tab[top] = element;
-          top = top+1;
-        }
+      if (is_full()){
+        throw "ERREUR : la pile est pleine, impossible de push !";
       }
-      catch(const char* chain){
-        std::cerr << chain << std::endl;
+      else{
+        tab[top] = element;
+        top = top+1;
       }
   }
 
   int pop () {
-      try{
-        if (is_empty()){
-          throw "ERREUR : La pile est vide , impossible de pop !";
-        }
-        else{
-          top = top-1;
-          return tab[top];
-        }
+      if (is_empty()){
+        throw "ERREUR : La pile est vide , impossible de pop !";
       }
-      catch(const char* chain){
-        std::cerr << chain << std::endl;
+      else{
+        top = top-1;
+        return tab[top];
       }
       return 0;
   }
