@@ -29,7 +29,7 @@ public:
         top = top-1;
         return tab[top];
       }
-      return 0;
+      // return 0;  // vr: inutile
   }
 
   bool is_empty () {
