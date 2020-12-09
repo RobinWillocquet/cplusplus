@@ -106,9 +106,11 @@ public:
                             top -> NextCell = nullptr;
                             top -> PrevCell = nullptr;
                             delete top;
+                            return;
                         }
                         else {
                             remove_back();
+                            return;
                         }
 
                     }
