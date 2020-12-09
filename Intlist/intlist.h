@@ -21,8 +21,9 @@ public:
      }
 
     ~IntList () {
-        FirstCell = nullptr;
-        LastCell = nullptr;
+        while(LastCell != nullptr) {
+            remove_front();
+        }
     }
 
     void add_front(int a) {
