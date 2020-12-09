@@ -53,19 +53,31 @@ public:
 
     void remove_front() {
         if(FirstCell != NULL) {
-            IntCell* first = FirstCell;
-            FirstCell = first -> NextCell;
-            FirstCell -> PrevCell = NULL;
-            first -> NextCell = NULL;
+            if(FirstCell == LastCell){
+                FirstCell = NULL;
+                LastCell = NULL;
+            }
+            else {
+                IntCell* first = FirstCell;
+                FirstCell = first -> NextCell;
+                FirstCell -> PrevCell = NULL;
+                first -> NextCell = NULL;
+            }
         }
     }
     
     void remove_back() {
         if(LastCell != NULL) {
-            IntCell* last = LastCell;
-            LastCell = last -> PrevCell;
-            LastCell -> NextCell = NULL;
-            last -> PrevCell = NULL;
+            if(FirstCell == LastCell){
+                FirstCell = NULL;
+                LastCell = NULL;
+            }
+            else {
+                IntCell* last = LastCell;
+                LastCell = last -> PrevCell;
+                LastCell -> NextCell = NULL;
+                last -> PrevCell = NULL;
+            }
         }
     }
 
