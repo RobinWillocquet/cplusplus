@@ -5,7 +5,7 @@ class IntCell {
 friend class IntList;
 
 private:
-    IntCell () : PrevCell(NULL), NextCell(NULL), val(0) {
+    IntCell () : PrevCell(nullptr), NextCell(nullptr), val(0) {
 
      }
     IntCell *PrevCell;
@@ -16,24 +16,24 @@ private:
 
 class IntList {
 public:
-    IntList () : FirstCell(NULL), LastCell(NULL) {
+    IntList () : FirstCell(nullptr), LastCell(nullptr) {
 
      }
 
     ~IntList () {
-        FirstCell = NULL;
-        LastCell = NULL;
+        FirstCell = nullptr;
+        LastCell = nullptr;
     }
 
     void add_front(int a) {
         IntCell *front = new IntCell;
         front -> val = a;
-        if(FirstCell != NULL) {
+        if(FirstCell != nullptr) {
             FirstCell -> PrevCell = front;
             front -> NextCell = FirstCell;
         }
         FirstCell = front;
-        if(LastCell == NULL) {
+        if(LastCell == nullptr) {
             LastCell = front;
         }
     }
@@ -41,42 +41,48 @@ public:
     void add_back(int a) {
         IntCell *back = new IntCell;
         back -> val = a;
-        if(LastCell != NULL) {
+        if(LastCell != nullptr) {
             LastCell -> NextCell = back;
             back -> PrevCell = LastCell;
         }
         LastCell = back;
-        if(FirstCell == NULL) {
+        if(FirstCell == nullptr) {
             FirstCell = back;
         }
     }
 
     void remove_front() {
-        if(FirstCell != NULL) {
+        if(FirstCell != nullptr) {
             if(FirstCell == LastCell){
-                FirstCell = NULL;
-                LastCell = NULL;
+                IntCell* cellule = FirstCell;
+                FirstCell = nullptr;
+                LastCell = nullptr;
+                delete cellule;
             }
             else {
                 IntCell* first = FirstCell;
                 FirstCell = first -> NextCell;
-                FirstCell -> PrevCell = NULL;
-                first -> NextCell = NULL;
+                FirstCell -> PrevCell = nullptr;
+                first -> NextCell = nullptr;
+                delete first;
             }
         }
     }
     
     void remove_back() {
-        if(LastCell != NULL) {
+        if(LastCell != nullptr) {
             if(FirstCell == LastCell){
-                FirstCell = NULL;
-                LastCell = NULL;
+                IntCell* cellule = FirstCell;
+                FirstCell = nullptr;
+                LastCell = nullptr;
+                delete cellule;
             }
             else {
                 IntCell* last = LastCell;
                 LastCell = last -> PrevCell;
-                LastCell -> NextCell = NULL;
-                last -> PrevCell = NULL;
+                LastCell -> NextCell = nullptr;
+                last -> PrevCell = nullptr;
+                delete last;
             }
         }
     }
@@ -88,7 +94,7 @@ public:
                 remove_front();
             }
             else {
-                while(top -> NextCell != NULL) {
+                while(top -> NextCell != nullptr) {
                     top = top -> NextCell;
                     if(top -> val == a) {
                         if(top -> NextCell != NULL) {
@@ -96,8 +102,9 @@ public:
                             IntCell* next = top -> NextCell;
                             prev -> NextCell = next;
                             next -> PrevCell = prev;
-                            top -> NextCell = NULL;
-                            top -> PrevCell = NULL;
+                            top -> NextCell = nullptr;
+                            top -> PrevCell = nullptr;
+                            delete top;
                         }
                         else {
                             remove_back();
@@ -115,7 +122,7 @@ public:
         if(top -> val == a) {
             return true;
         }
-        while(top -> NextCell != NULL) {
+        while(top -> NextCell != nullptr) {
             top = top -> NextCell;
             if(top -> val == a) {
                 return true;
@@ -128,7 +135,7 @@ public:
         std::cout << '{';
         IntCell* top = FirstCell;
         std::cout << top -> val << ' ';
-        while(top -> NextCell != NULL) {
+        while(top -> NextCell != nullptr) {
             top = top -> NextCell;
             std::cout << top -> val << ' ';
         }
