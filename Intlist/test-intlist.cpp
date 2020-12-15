@@ -18,7 +18,10 @@ int main(){
     l.print();
     l.add_back(30);
     l.print();
+    std::cout << l.get_element_at(1) << std::endl;
     l.remove(2);
     l.print();
+    std::cout << l.size() << std::endl;
+    std::cout << std::boolalpha << l.is_empty() << std::endl;
     return 0;
 }

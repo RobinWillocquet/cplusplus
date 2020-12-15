@@ -110,7 +110,6 @@ public:
                         }
                         else {
                             remove_back();
-                            return;
                         }
 
                     }
@@ -143,6 +142,38 @@ public:
             std::cout << top -> val << ' ';
         }
         std::cout << '}' << std::endl;
+    }
+
+    int size() {
+        if(FirstCell==nullptr and LastCell==nullptr) {
+            return 0;
+        }
+        IntCell* top = FirstCell;
+        int c = 1;
+        while(top -> NextCell !=nullptr) {
+            top = top -> NextCell;
+            c++;
+        }
+        return c;
+    }
+
+    bool is_empty() {
+        return size()==0;
+    }
+
+    int get_element_at(int s) {
+        if(s>size()-1) {
+            return 0;
+        }
+        else {
+            IntCell* top = FirstCell;
+            int c = 0;
+            while(c != s) {
+                top = top -> NextCell;
+                c++;
+            }
+            return(top -> val);
+        }
     }
 
     
