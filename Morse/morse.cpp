@@ -145,7 +145,3 @@ bool pareil(std::string a, std::string b){
     }
     return same;
 }
-
-int main() {
-    return 0;
-}

@@ -1,3 +1,6 @@
+#ifndef MORSE_H
+#define MORSE_H
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -49,3 +52,5 @@ std::string decode_lettre(std::string s);
 std::string decode_mot(std::string s);
 std::string decode_msg(std::string s);
 bool pareil(std::string a, std::string b);
+
+#endif
