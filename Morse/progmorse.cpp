@@ -42,21 +42,27 @@ void execmorse() {
             std::ifstream FluxFr(FichierFr);
             std::cout << "Spécifiez le chemin du fichier traduit : ";
             std::string FichierMorse;
-            std::getline(std::cin,FichierMorse);            
-            std::string bruit;
-            bruit += FichierMorse.at(0);
-            std::cout << bruit << std::endl;
+            std::getline(std::cin,FichierMorse);
             std::ofstream FluxMorse(FichierMorse);
             std::string lignefr;
             while(getline(FluxFr,lignefr)){
-                std::string S;
-                S += toupper(lignefr.at(lignefr.size()-1));
-                if(mapmorse.find(S) == mapmorse.end()){
-                    lignefr.erase(lignefr.size()-1);                    
+                if(lignefr.size() == 0){
+                    std::string lignemorse;
+                    FluxMorse << lignemorse << std::endl;
                 }
-                std::string lignemorse = encode_msg(lignefr);
-                // std::cout << "'" << lignemorse << "' traduit '" << lignefr << "'" << std::endl;
-                FluxMorse << lignemorse << std::endl;
+                else {
+                    std::string S;
+                    S += toupper(lignefr.at(lignefr.size()-1));
+                    if(mapmorse.find(S) == mapmorse.end()){
+                        lignefr.erase(lignefr.size()-1);                    
+                    }
+                    std::string lignemorse;
+                    if(lignefr != ""){
+                        lignemorse = encode_msg(lignefr);
+                    }   
+                    // std::cout << "'" << lignemorse << "' traduit '" << lignefr << "'" << std::endl;
+                    FluxMorse << lignemorse << std::endl;
+                }
             }
             std::cout << "Votre fichier '" << FichierFr <<"' est traduit en morse dans '" << FichierMorse << "'." << std::endl;
             break;
@@ -69,27 +75,33 @@ void execmorse() {
             std::ifstream FluxMorse2(FichierMorse2);
             std::cout << "Spécifiez le chemin du fichier traduit : ";
             std::string FichierFr2;
-            std::getline(std::cin,FichierFr2);            
-            std::string bruit2;
-            bruit2 += FichierFr2.at(0);
-            std::cout << bruit2 << std::endl;
+            std::getline(std::cin,FichierFr2);
             std::ofstream FluxFr2(FichierFr2);
             std::string lignemorse2;
             while(getline(FluxMorse2,lignemorse2)){
-                std::string s;
-                s += toupper(lignemorse2.at(lignemorse2.size()-1));
-                std::string letter = "";
-                for(std::map<std::string,std::string>::iterator it = mapmorse.begin();it != mapmorse.end();it++){
-                    if(it->second == s){
-                        letter = it->first;
+                if(lignemorse2.size() == 0){
+                    std::string lignefr2;
+                    FluxFr2 << lignefr2 << std::endl;
+                }
+                else {
+                    std::string s;
+                    s += toupper(lignemorse2.at(lignemorse2.size()-1));
+                    std::string letter = "";
+                    for(std::map<std::string,std::string>::iterator it = mapmorse.begin();it != mapmorse.end();it++){
+                        if(it->second == s){
+                            letter = it->first;
+                        }   
                     }
+                    if(letter == ""){
+                        lignemorse2.erase(lignemorse2.size()-1);                     
+                    }
+                    std::string lignefr2;
+                    if(lignemorse2 != ""){
+                        lignefr2 = decode_msg(lignemorse2);
+                    }
+                    // std::cout << "'" << lignefr2 << "' traduit '" << lignemorse2 << "'" << std::endl;
+                    FluxFr2 << lignefr2 << std::endl;
                 }
-                if(letter == ""){
-                    lignemorse2.erase(lignemorse2.size()-1);                     
-                }
-                std::string lignefr2 = decode_msg(lignemorse2);
-                // std::cout << "'" << lignefr2 << "' traduit '" << lignemorse2 << "'" << std::endl;
-                FluxFr2 << lignefr2 << std::endl;
             }
             std::cout << "Votre fichier '" << FichierMorse2 <<"' est traduit en français dans '" << FichierFr2 << "'." << std::endl;
             break;
