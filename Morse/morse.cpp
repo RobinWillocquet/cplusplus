@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 
-std::map<std::string,std::string> mapmorse = {
+std::map<std::string,std::string> mapmorse = { // La map avec nos caracs en français et morse
     {"A", ".-"},
     {"B", "-..."},
     {"C", "-.-."},
@@ -39,7 +39,23 @@ std::map<std::string,std::string> mapmorse = {
     {"7", "--..."},
     {"8", "---.."},
     {"9", "----."},
-    {"'", ".----."}
+    {"'", ".----."},
+    {".", ".-.-.-"},
+    {",", "--..--"},
+    {"?", "..--.."},
+    {"!", "-.-.--"},
+    {"/", "-..-."},
+    {"(", "-.--."},
+    {")", "-.--.-"},
+    {"&", ".-..."},
+    {":", "---..."},
+    {";", "-.-.-."},
+    {"=", "-...-"},
+    {"+", ".-.-."},
+    {"-", "-....-"},
+    {"_", "..--.-"},
+    {"$", "...-..-"},
+    {"@", ".--.-."}
 };
 
 std::string encode_lettre(std::string s){
@@ -47,9 +63,9 @@ std::string encode_lettre(std::string s){
     S += toupper(s.at(0));
     try{
         if(mapmorse.find(S) == mapmorse.end()){
-            throw "ERREUR : cette lettre n'est pas codée !";
+            throw "ERREUR : cette lettre n'est pas codée !"; // Il faut le notifier
         }
-        return mapmorse[S];
+        return mapmorse[S]; // simple décodage par map ici
     }
     catch(const char* chaine){
         std::cerr << chaine;
@@ -59,15 +75,15 @@ std::string encode_lettre(std::string s){
 
 std::string encode_mot(std::string mot){
     std::string motcode;
-    for(int i = 0;i<mot.size()-1;i++) {
+    for(unsigned int i = 0;i<mot.size()-1;i++) {
         std::string letter;
         letter += mot.at(i);
-        motcode += encode_lettre(letter);
+        motcode += encode_lettre(letter); // On encode chaque lettre du mot
         motcode += " ";
     }
     std::string lastletter;
     lastletter += mot.at(mot.size()-1);
-    motcode += encode_lettre(lastletter);
+    motcode += encode_lettre(lastletter); // On encode la dernière lettre, sans espace ajouté
     return motcode;
 }
 
@@ -75,19 +91,19 @@ std::string encode_msg(std::string msg){
     int deb = 0;
     std::string msgcode;
     if(msg.at(0) == ' '){
-        msg.erase(msg.begin());
+        msg.erase(msg.begin()); // Pour plus d'aisance
     }
     if(msg.at(msg.size()-1) != ' '){
-        msg.push_back(' ');
+        msg.push_back(' '); // Idem
     }
-    for(int i = 0;i<msg.size();){
+    for(unsigned int i = 0;i<msg.size();){
        if(msg.at(i) ==  ' '){
             std::string mot;
-            for(int j = deb;j<i;j++){
-                mot += msg.at(j);
+            for(unsigned int j = deb;j<i;j++){
+                mot += msg.at(j); // On crée le mot avant l'espace
             }
-            msgcode += encode_mot(mot);
-            msgcode += " / ";
+            msgcode += encode_mot(mot); // On rajoute le mot encodé au message
+            msgcode += " / "; // On sépare le mot des autres 
             i++;
             deb = i;
         }
@@ -95,7 +111,7 @@ std::string encode_msg(std::string msg){
             i++;
         }
     }
-    msgcode.erase(msgcode.size()-3);
+    msgcode.erase(msgcode.size()-3); // Pour ne pas avoir le retour à la ligne
     return msgcode;
 }
 
@@ -110,12 +126,12 @@ std::string decode_lettre(std::string s){
         if(letter == ""){
             throw "ERREUR : ce code ne correspond à aucune lettre !";
         }
-        return letter;
+        return letter; // On vérifie que ce code correspond bien à une lettre
     }
     catch(const char* chaine){
         std::cerr << chaine << ' ' << s;
     }
-    return letter;
+    return letter; // Décodage simple
 }
 
 std::string decode_mot(std::string motcode){
@@ -127,13 +143,13 @@ std::string decode_mot(std::string motcode){
     if(motcode.at(motcode.size()-1) != ' '){
         motcode.push_back(' ');
     }
-    for(int i = 0;i<motcode.size();){
+    for(unsigned int i = 0;i<motcode.size();){
         if(motcode.at(i) ==  ' '){
             std::string letter;
-            for(int j = deb;j<i;j++){
-                letter += motcode.at(j);
+            for(unsigned int j = deb;j<i;j++){
+                letter += motcode.at(j); 
             }
-            mot += decode_lettre(letter);
+            mot += decode_lettre(letter); // On décode chaque lettre du mot
             i++;
             deb = i;
         }
@@ -151,15 +167,15 @@ std::string decode_msg(std::string msgcode){
         msgcode.erase(msgcode.begin());
     }
     if(msgcode.at(msgcode.size()-1) != ' '){
-        msgcode.push_back('/');
+        msgcode.push_back('/'); // Pour bien repérer le dernier mot
     }
-    for(int i = 0;i<msgcode.size();){
+    for(unsigned int i = 0;i<msgcode.size();){
         if(msgcode.at(i) ==  '/'){
             std::string motcode;
-            for(int j = deb;j<i;j++){
-                motcode += msgcode.at(j);
+            for(unsigned int j = deb;j<i;j++){
+                motcode += msgcode.at(j); // On écrit le mot morse...
             }
-            msg += decode_mot(motcode);
+            msg += decode_mot(motcode); // Et on le décode !
             msg += " ";
             i++;
             deb = i;
@@ -177,7 +193,7 @@ bool pareil(std::string a, std::string b){
         return false;
     }
     bool same = true;
-    for(int i = 0;i<a.size();i++){
+    for(unsigned int i = 0;i<a.size();i++){
         if(a.at(i) != b.at(i)){
             same = false;
         }

@@ -8,7 +8,7 @@ testmorse : testmorse.o morse.o
 testaudio : testaudio.o audiolib.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-progmorse : progmorse.o morse.o 
+progmorse : progmorse.o morse.o audiolib.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 
