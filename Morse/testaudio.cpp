@@ -43,14 +43,14 @@ int main() {
     std::vector<float>* samplesi = new std::vector<float>;
     int* topi = new int;
     *topi = 0;
-    lineTextToAudio("... --- ...",samplesi,topi,0.2);
-    writeAudioFile(samplesi,topi,"SOSi.wav"); // On convertit "... --- ..." en .wav
+    lineTextToAudio("... --- ... / ... --- ... / ... --- ...",samplesi,topi,0.2);
+    writeAudioFile(samplesi,topi,"triplesos.wav"); // On convertit le triple SOS en .wav
     std::cout << "**********************" << std::endl;
-    std::cout << "Test audio : création d'un signal SOS 2 " << std::endl;        
+    std::cout << "Test audio : création d'un signal SOS triple " << std::endl;        
     std::cout << "**********************" << std::endl << std::endl;
     delete samplesi;
     delete topi;
-    std::string inputwav = "SOSi.wav";
+    std::string inputwav = "triplesos.wav";
     AudioFile<float> soswav;
     bool loadedok = soswav.load(inputwav); // On charge le .wav qu'on vient de créer dans soswav
     assert(loadedok);
@@ -60,11 +60,11 @@ int main() {
     std::cout << numSamples << std::endl;
     std::cout << numChannels << std::endl;
     for(int i = 0; i < numSamples;i++) {
-        samplesj -> push_back(soswav.samples[0][i]); // samplesj sera la liste des samples de SOSi.wav
+        samplesj -> push_back(soswav.samples[0][i]); // samplesj sera la liste des samples de triplesos.wav
         // std::cout << samplesj -> at(i) << ", "; // ... Il arrete d'en afficher apres environ 430 samples ! Pourquoi ? Même sans les afficher, le programme freeze au bout d'un certain temps... While infini ? Je ne sais pas...
     }
     std::string sosmorse;
-    sosmorse = AudioToText(samplesj,0.2); // Ne fonctionne pas... Enfin je n'ai pas d'erreur de compil mais le programme freeze !
+    sosmorse = AudioToText(samplesj,0.2); // Compile mais affiche des out of range !
     std::cout << "'" << sosmorse << "'" << std::endl;
     delete samplesj;
 }

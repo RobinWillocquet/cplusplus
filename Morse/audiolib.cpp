@@ -81,7 +81,7 @@ void lineTextToAudio(std::string morseline,std::vector<float>* samples, int* top
                 break;
             }
             case '/': {
-                ajouteSilence(samples,top,3*duree); // Pour un total de 1.4s i.e. 7 temps.
+                ajouteSilence(samples,top,2*duree); // Pour un total de 1.4s i.e. 7 temps.
                 break;
             }
             default: {
@@ -108,6 +108,7 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
             *end = *end+1; // On regarde la taille de la portion non nulle
         }
         unsigned int taille = *end-*top;
+        std::cout << "Le silence est de taille : " << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
             *morseline += "";
             *top = *end;
@@ -135,7 +136,7 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
             *morseline += "";
             *top = *end;
             delete end;
-            return *top;
+            return *top; // Le cas où rien ne se passe
         }
     }
     return *top;
