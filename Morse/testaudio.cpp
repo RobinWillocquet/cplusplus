@@ -59,9 +59,9 @@ int main() {
     int numChannels = soswav.getNumChannels();
     std::cout << numSamples << std::endl;
     std::cout << numChannels << std::endl;
-    for(int i = 0; i < 430;i++) {
+    for(int i = 0; i < numSamples;i++) {
         samplesj -> push_back(soswav.samples[0][i]); // samplesj sera la liste des samples de SOSi.wav
-        std::cout << samplesj -> at(i) << ", "; // ... Il arrete d'en afficher apres environ 430 samples ! Pourquoi ? Même sans les afficher, le programme freeze au bout d'un certain temps... While infini ? Je ne sais pas...
+        // std::cout << samplesj -> at(i) << ", "; // ... Il arrete d'en afficher apres environ 430 samples ! Pourquoi ? Même sans les afficher, le programme freeze au bout d'un certain temps... While infini ? Je ne sais pas...
     }
     std::string sosmorse;
     sosmorse = AudioToText(samplesj,0.2); // Ne fonctionne pas... Enfin je n'ai pas d'erreur de compil mais le programme freeze !

@@ -96,32 +96,46 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
     int unit = floor(rate*duree); // Le nombre de samples par unité
     unsigned int unit_bas = floor(unit*0.9f);        
     unsigned int unit_haut = floor(unit*1.1f); // Pour créer une marge d'acceptation
-    unsigned int deb = *top;
-    float valsuite = samples -> at(deb+1); // On regarde si c'est aussi un non nul, pour déceler une portion de sinus
+    unsigned int* end = new unsigned int;
+    float valsuite = samples -> at(*top+1); // On regarde si c'est aussi un non nul, pour déceler une portion de sinus
     if(valsuite != 0) {
-        *top += 1; // On passe à la suite
+        *top += 1;
+        return *top; // On passe à la suite
     }
     if(valsuite == 0) {
-        unsigned int end = deb+1;
-        while(samples-> at(end+1) == 0 && end < samples -> size()-1) {
-            end++; // On regarde la taille de la portion non nulle
+        *end = *top+1;
+        while(samples-> at(*end+1) == 0 && *end < samples -> size()-2) {
+            *end = *end+1; // On regarde la taille de la portion non nulle
         }
-        unsigned int taille = end-deb;
+        unsigned int taille = *end-*top;
         if(unit_bas <= taille && taille <= unit_haut) {
             *morseline += "";
-            *top = end; // Un espace entre deux caractères morse
+            *top = *end;
+            delete end;
+            return *top; // Un espace entre deux caractères morse
         }
         if(3*unit_bas <= taille && taille <= 3*unit_haut) {
             *morseline += " ";
-            *top = end; // Un espace entre deux lettres morse
+            *top = *end;
+            delete end;
+            return *top; // Un espace entre deux lettres morse
         }
         if(7*unit_bas <= taille && taille <= 7*unit_haut) {
             *morseline += " / ";
-            *top = end; // Un espace entre deux mots morse
+            *top = *end;
+            return *top; // Un espace entre deux mots morse
         }
         if(taille > 7*unit_haut) {
             *morseline += " / -..-. / ";
-            *top = end; // Un saut à la ligne (ici un /)
+            *top = *end;
+            delete end;
+            return *top; // Un saut à la ligne (ici un /)
+        }
+        else {
+            *morseline += "";
+            *top = *end;
+            delete end;
+            return *top;
         }
     }
     return *top;
@@ -132,24 +146,36 @@ int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::
     int unit = floor(rate*duree);
     float unit_bas = floor(unit*0.9f);        
     float unit_haut = floor(unit*1.1f);
-    unsigned int deb = *top;
-    float valsuite = samples -> at(deb+1);
+    unsigned int* end = new unsigned int;
+    float valsuite = samples -> at(*top+1);
     if(valsuite == 0) {
         *top += 1;
+        return *top;
     }
     if(valsuite != 0) {
-        unsigned int end = deb+1;
-        while(samples-> at(end+1) != 0 && end < samples -> size() - 1) {
-            end++;
+        *end = *top+1;
+        while((samples-> at(*end+1) != 0 || (samples -> at(*end+1) == 0 && samples -> at(*end+2) != 0)) && *end < samples -> size() - 2) {
+            *end = *end+1;
         }
-        unsigned int taille = end-deb;
+        unsigned int taille = *end-*top;
+        std::cout << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
             *morseline += ".";
-            *top = end; // Une unité simple morse
+            *top = *end; // Une unité simple morse
+            delete end;
+            return *top;
         }
         if(3*unit_bas <= taille && taille <= 3*unit_haut) {
             *morseline += "-";
-            *top = end; // Une unité longue morse
+            *top = *end; // Une unité longue morse
+            delete end;
+            return *top;
+        }
+        else {
+            *morseline += "";
+            *top = *end;
+            delete end;
+            return *top; 
         }
     }
     return *top;
@@ -166,12 +192,16 @@ std::string AudioToText(std::vector<float>* samples, float duree) {
             *top = i;
             float val = samples -> at(i);
             if(val == 0) {
-                i = decodeSilence(samples,duree,top,morseline);      // On regarde si c'est bien un silence et on le décode          
+                i = decodeSilence(samples,duree,top,morseline); // On regarde si c'est bien un silence et on le décode
+                std::cout << *morseline << ", " << i << std::endl;    
             }
             if(val != 0) {
                 i = decodeBip(samples,duree,top,morseline); // Idem avec un bip
+                std::cout << *morseline << ", " << i << std::endl;
             }
         }
+        delete top;
     }
     return *morseline; // La ligne décodée est renvoyée
+    delete morseline;
 }
