@@ -137,25 +137,32 @@ std::string decode_lettre(std::string s){
 std::string decode_mot(std::string motcode){
     int deb = 0;
     std::string mot;
-    if(motcode.at(0) == ' '){
-        motcode.erase(motcode.begin());
+    if(motcode.size() == 0){
+        mot = "";
+        return mot;
     }
-    if(motcode.at(motcode.size()-1) != ' '){
-        motcode.push_back(' ');
-    }
-    for(unsigned int i = 0;i<motcode.size();){
-        if(motcode.at(i) ==  ' '){
-            std::string letter;
-            for(unsigned int j = deb;j<i;j++){
-                letter += motcode.at(j); 
+    else {
+        if(motcode.at(0) == ' '){
+            motcode.erase(motcode.begin());
+        }
+        if(motcode.at(motcode.size()-1) != ' '){
+            motcode.push_back(' ');
+        }
+        for(unsigned int i = 0;i<motcode.size();){
+            if(motcode.at(i) ==  ' '){
+                std::string letter;
+                for(unsigned int j = deb;j<i;j++){
+                    letter += motcode.at(j); 
+                }
+                mot += decode_lettre(letter); // On décode chaque lettre du mot
+                i++;
+                deb = i;
             }
-            mot += decode_lettre(letter); // On décode chaque lettre du mot
-            i++;
-            deb = i;
+            else{
+                i++;
+            }
         }
-        else{
-            i++;
-        }
+        return mot;
     }
     return mot;
 }

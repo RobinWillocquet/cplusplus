@@ -104,11 +104,11 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
     }
     if(valsuite == 0) {
         *end = *top+1;
-        while(samples-> at(*end+1) == 0 && *end < samples -> size()-2) {
+        while(samples-> at(*end+1) == 0 && *end < samples -> size()-3) {
             *end = *end+1; // On regarde la taille de la portion non nulle
         }
         unsigned int taille = *end-*top;
-        std::cout << "Le silence est de taille : " << taille << std::endl;
+        // std::cout << "Le silence est de taille : " << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
             *morseline += "";
             *top = *end;
@@ -155,11 +155,11 @@ int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::
     }
     if(valsuite != 0) {
         *end = *top+1;
-        while((samples-> at(*end+1) != 0 || (samples -> at(*end+1) == 0 && samples -> at(*end+2) != 0)) && *end < samples -> size() - 2) {
+        while((samples-> at(*end+1) != 0 || (samples -> at(*end+1) == 0 && samples -> at(*end+2) != 0)) && *end < samples -> size() - 3) {
             *end = *end+1;
         }
         unsigned int taille = *end-*top;
-        std::cout << taille << std::endl;
+        // std::cout << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
             *morseline += ".";
             *top = *end; // Une unité simple morse
@@ -189,16 +189,16 @@ std::string AudioToText(std::vector<float>* samples, float duree) {
     }
     else {
         unsigned int* top = new unsigned int;
-        for(unsigned int i = 0;i < samples -> size()-1;){ // On parcourt les samples
+        for(unsigned int i = 0;i < samples -> size() - 3;){ // On parcourt les samples
             *top = i;
             float val = samples -> at(i);
             if(val == 0) {
                 i = decodeSilence(samples,duree,top,morseline); // On regarde si c'est bien un silence et on le décode
-                std::cout << *morseline << ", " << i << std::endl;    
+                // std::cout << *morseline << ", " << i << std::endl;    
             }
             if(val != 0) {
                 i = decodeBip(samples,duree,top,morseline); // Idem avec un bip
-                std::cout << *morseline << ", " << i << std::endl;
+                // std::cout << *morseline << ", " << i << std::endl;
             }
         }
         delete top;

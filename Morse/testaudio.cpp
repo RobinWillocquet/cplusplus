@@ -65,6 +65,6 @@ int main() {
     }
     std::string sosmorse;
     sosmorse = AudioToText(samplesj,0.2); // Compile mais affiche des out of range !
-    std::cout << "'" << sosmorse << "'" << std::endl;
+    std::cout << "Votre ligne est : '" << sosmorse << "'." << std::endl;
     delete samplesj;
 }
