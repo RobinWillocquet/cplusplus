@@ -4,22 +4,22 @@
 #include "AudioFile.h"
 #include "audiolib.h"
 
-void SOS(std::vector<float>* samples,int* top){
+void SOS(std::vector<float>* samples,int* top,float frequency){
     for(int i = 0; i < 3; i++){
-        ajouteBip(samples,top,0.2);
-        ajouteSilence(samples,top,0.2);
+        ajouteBip(samples,top,0.2,frequency);
+        ajouteSilence(samples,top,0.2,frequency);
     }
-    ajouteSilence(samples,top,0.4);
+    ajouteSilence(samples,top,0.4,frequency);
     for(int i = 0; i < 3; i++){
-        ajouteBip(samples,top,0.6);
-        ajouteSilence(samples,top,0.2);
+        ajouteBip(samples,top,0.6,frequency);
+        ajouteSilence(samples,top,0.2,frequency);
     }
-    ajouteSilence(samples,top,0.4);
+    ajouteSilence(samples,top,0.4,frequency);
     for(int i = 0; i < 2; i++){
-        ajouteBip(samples,top,0.2);
-        ajouteSilence(samples,top,0.2);
+        ajouteBip(samples,top,0.2,frequency);
+        ajouteSilence(samples,top,0.2,frequency);
     }
-    ajouteBip(samples,top,0.2);
+    ajouteBip(samples,top,0.2,frequency);
     // ajouteSilence(samples,top,0.2);
 
 }
@@ -30,7 +30,7 @@ int main() {
     std::vector<float>* samples = new std::vector<float>;
     int* top = new int;
     *top = 0;
-    SOS(samples,top);
+    SOS(samples,top,800);
     writeAudioFile(samples,top,"SOS.wav"); // On crée un signal SOS en rajoutant des bips et des silences
     // std::cout << samples -> size() << std::endl;
     // std::cout << *top << std::endl;
@@ -43,7 +43,7 @@ int main() {
     std::vector<float>* samplesi = new std::vector<float>;
     int* topi = new int;
     *topi = 0;
-    lineTextToAudio("... --- ... / ... --- ... / ... --- ...",samplesi,topi,0.2);
+    lineTextToAudio("... --- ... / ... --- ... / ... --- ...",samplesi,topi,0.2,800);
     writeAudioFile(samplesi,topi,"triplesos.wav"); // On convertit le triple SOS en .wav
     std::cout << "**********************" << std::endl;
     std::cout << "Test audio : création d'un signal SOS triple " << std::endl;        

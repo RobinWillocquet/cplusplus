@@ -55,7 +55,8 @@ std::map<std::string,std::string> mapmorse = { // La map avec nos caracs en fran
     {"-", "-....-"},
     {"_", "..--.-"},
     {"$", "...-..-"},
-    {"@", ".--.-."}
+    {"@", ".--.-."},
+    {"É", "..-.."}
 };
 
 std::string encode_lettre(std::string s){

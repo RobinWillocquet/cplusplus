@@ -55,7 +55,10 @@ void execmorse() {
             std::cout << "Donnez une durée caractéristique (par défaut : 0.2s) : "; // Durée d'un bip réglementaire
             float duree;
             std::cin >> duree;
-            lineTextToAudio(msg2,samples,top,duree);
+            std::cout << "Donnez la fréquence de la note d'un bip (par défaut : 800, en Hz) : ";
+            float frequency;
+            std::cin >> frequency;
+            lineTextToAudio(msg2,samples,top,duree,frequency);
             writeAudioFile(samples,top,Audio); // On convertit le message en .wav
             std::cout << "La traduction en morse de '" << msg1 << "' est dans '" << Audio << "'." <<std::endl;
             delete top;
@@ -173,6 +176,9 @@ void execmorse() {
             std::cout << "Donnez une durée caractéristique (par défaut : 0.2s) : "; // Durée d'un bip réglementaire
             float duree;
             std::cin >> duree;
+            std::cout << "Donnez la fréquence de la note d'un bip (par défaut : 800, en Hz) : ";
+            float frequency;
+            std::cin >> frequency;
             std::vector<float>* samples = new std::vector<float>;
             int* top = new int;
             *top = 0;
@@ -181,7 +187,7 @@ void execmorse() {
                 if(lignefr.size() == 0){
                     std::string lignemorse;
                     FluxMorse << lignemorse << std::endl;
-                    lineTextToAudio(" / ",samples,top,duree); // On ajoute un triple / entre les paragraphes
+                    lineTextToAudio(" / ",samples,top,duree,frequency); // On ajoute un triple / entre les paragraphes
                 }
                 else {
                     std::string S;
@@ -196,8 +202,8 @@ void execmorse() {
                     }   
                     // std::cout << "'" << lignemorse << "' traduit '" << lignefr << "'" << std::endl;
                     FluxMorse << lignemorse << std::endl;
-                    lineTextToAudio(lignemorse,samples,top,duree);
-                    lineTextToAudio(" / -..-. / ",samples,top,duree); // On ajoute la ligne aux samples audios, et on la sépare des autres
+                    lineTextToAudio(lignemorse,samples,top,duree,frequency);
+                    lineTextToAudio(" / -..-. / ",samples,top,duree,frequency); // On ajoute la ligne aux samples audios, et on la sépare des autres
                 }
             }
             writeAudioFile(samples,top,AudioMorse); // On écrit le fichier demandé

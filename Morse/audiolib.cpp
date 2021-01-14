@@ -8,11 +8,11 @@
 //=======================================================================
 
 //=======================================================================    
-void ajouteBip(std::vector<float>* samples, int* top, float duree){   
+void ajouteBip(std::vector<float>* samples, int* top, float duree, float frequency){   
     //---------------------------------------------------------------
     // Create some variables to help us generate a sine wave   
     const float sampleRate = 44100.f;
-    const float frequencyInHz = 800.f;
+    const float frequencyInHz = frequency;
     int dureesamples = floor(duree*sampleRate);
     int end = *top+dureesamples;
     for (int i = 0 ; i < dureesamples ; i++){
@@ -21,11 +21,11 @@ void ajouteBip(std::vector<float>* samples, int* top, float duree){
     *top = end;
 }
 
-void ajouteSilence(std::vector<float>* samples, int* top, float duree){
+void ajouteSilence(std::vector<float>* samples, int* top, float duree, float frequency){
     //---------------------------------------------------------------
     // Create some variables to help us generate a sine wave       
     const float sampleRate = 44100.f;
-    const float frequencyInHz = 800.f;
+    const float frequencyInHz = frequency;
     int dureesamples = floor(duree*sampleRate);
     int end = *top+dureesamples;
     for (int i = 0 ; i < dureesamples ; i++){
@@ -62,26 +62,26 @@ void writeAudioFile(std::vector<float>* samples, int* top,std::string filePath) 
     a.save (filePath, AudioFileFormat::Wave);
 }
 
-void lineTextToAudio(std::string morseline,std::vector<float>* samples, int* top, float duree){
+void lineTextToAudio(std::string morseline,std::vector<float>* samples, int* top, float duree, float frequency){
     for(unsigned int i = 0; i < morseline.size();i++){ // On est sûrs de ne pas avoir de warning de comparaison, puisque i est unsigned.
         char carac = morseline.at(i); // Selon le caractère, on met un bip ou un silence différent !
         switch(carac){
             case '.': { 
-                ajouteBip(samples,top,duree);
-                ajouteSilence(samples,top,duree);
+                ajouteBip(samples,top,duree,frequency);
+                ajouteSilence(samples,top,duree,frequency);
                 break;
             }
             case '-': {
-                ajouteBip(samples,top,3*duree);
-                ajouteSilence(samples,top,duree);
+                ajouteBip(samples,top,3*duree,frequency);
+                ajouteSilence(samples,top,duree,frequency);
                 break;
             }
             case ' ': {
-                ajouteSilence(samples,top,2*duree); // Deja 0.2s après le dernier caractère, il suffit donc de rajouter 0.4s
+                ajouteSilence(samples,top,2*duree,frequency); // Deja 0.2s après le dernier caractère, il suffit donc de rajouter 0.4s
                 break;
             }
             case '/': {
-                ajouteSilence(samples,top,2*duree); // Pour un total de 1.4s i.e. 7 temps.
+                ajouteSilence(samples,top,2*duree,frequency); // Pour un total de 1.4s i.e. 7 temps.
                 break;
             }
             default: {
