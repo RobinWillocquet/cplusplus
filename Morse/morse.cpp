@@ -147,7 +147,7 @@ std::string decode_mot(std::string motcode){
             motcode.erase(motcode.begin());
         }
         if(motcode.at(motcode.size()-1) != ' '){
-            motcode.push_back(' ');
+            motcode.push_back(' '); // Ainsi l'entièreté du message est décodée
         }
         for(unsigned int i = 0;i<motcode.size();){
             if(motcode.at(i) ==  ' '){
@@ -203,7 +203,7 @@ bool pareil(std::string a, std::string b){
     bool same = true;
     for(unsigned int i = 0;i<a.size();i++){
         if(a.at(i) != b.at(i)){
-            same = false;
+            same = false; // Si un seul caractère diffère...
         }
     }
     return same;

@@ -4,7 +4,7 @@
 #include "AudioFile.h"
 #include "audiolib.h"
 
-void SOS(std::vector<float>* samples,int* top,float frequency){
+void SOS(std::vector<float>* samples,int* top,float frequency){ // On crée une fonction pour créer SOS avec des bips
     for(int i = 0; i < 3; i++){
         ajouteBip(samples,top,0.2,frequency);
         ajouteSilence(samples,top,0.2,frequency);
@@ -61,10 +61,9 @@ int main() {
     std::cout << numChannels << std::endl;
     for(int i = 0; i < numSamples;i++) {
         samplesj -> push_back(soswav.samples[0][i]); // samplesj sera la liste des samples de triplesos.wav
-        // std::cout << samplesj -> at(i) << ", "; // ... Il arrete d'en afficher apres environ 430 samples ! Pourquoi ? Même sans les afficher, le programme freeze au bout d'un certain temps... While infini ? Je ne sais pas...
     }
     std::string sosmorse;
-    sosmorse = AudioToText(samplesj,0.2); // Compile mais affiche des out of range !
+    sosmorse = AudioToText(samplesj,0.2); // On décode l'audio
     std::cout << "Votre ligne est : '" << sosmorse << "'." << std::endl;
     delete samplesj;
 }

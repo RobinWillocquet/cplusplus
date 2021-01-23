@@ -25,7 +25,7 @@ void ajouteSilence(std::vector<float>* samples, int* top, float duree, float fre
     //---------------------------------------------------------------
     // Create some variables to help us generate a sine wave       
     const float sampleRate = 44100.f;
-    const float frequencyInHz = frequency;
+    const float frequencyInHz = frequency; // On peut choisir la fréquence du sinus pour une note choisie
     int dureesamples = floor(duree*sampleRate);
     int end = *top+dureesamples;
     for (int i = 0 ; i < dureesamples ; i++){
@@ -36,16 +36,8 @@ void ajouteSilence(std::vector<float>* samples, int* top, float duree, float fre
 
 
 void writeAudioFile(std::vector<float>* samples, int* top,std::string filePath) { // Provient en partie de la fonction pour créer un .wav sinus de Adam Stark
-    //---------------------------------------------------------------
-    // 1. Let's setup our AudioFile instance
-        
     AudioFile<float> a;
     a.setNumChannels (2);
-
-        
-    //---------------------------------------------------------------
-    // 3. Write the samples to the AudioFile sample buffer
-        
     a.setNumSamplesPerChannel (*top);
     for (int i = 0; i < a.getNumSamplesPerChannel(); i++)
     {
@@ -54,12 +46,7 @@ void writeAudioFile(std::vector<float>* samples, int* top,std::string filePath) 
             a.samples[channel][i] = samples -> at(i); // On ecrit le fichier avec le tableau des samples
         }
     }
-    
-    //---------------------------------------------------------------
-    // 4. Save the AudioFile
-        
-    // change this to somewhere useful for you
-    a.save (filePath, AudioFileFormat::Wave);
+    a.save (filePath, AudioFileFormat::Wave); // On sauvegarde le fichier
 }
 
 void lineTextToAudio(std::string morseline,std::vector<float>* samples, int* top, float duree, float frequency){
@@ -105,7 +92,7 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
     if(valsuite == 0) {
         *end = *top+1;
         while(samples-> at(*end+1) == 0 && *end < samples -> size()-3) {
-            *end = *end+1; // On regarde la taille de la portion non nulle
+            *end = *end+1; // On regarde la taille de la portion nulle
         }
         unsigned int taille = *end-*top;
         // std::cout << "Le silence est de taille : " << taille << std::endl;
@@ -151,12 +138,12 @@ int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::
     float valsuite = samples -> at(*top+1);
     if(valsuite == 0) {
         *top += 1;
-        return *top;
+        return *top; // On passe à la suite
     }
     if(valsuite != 0) {
         *end = *top+1;
         while((samples-> at(*end+1) != 0 || (samples -> at(*end+1) == 0 && samples -> at(*end+2) != 0)) && *end < samples -> size() - 3) {
-            *end = *end+1;
+            *end = *end+1; // On regarde la taille de la portion non nulle
         }
         unsigned int taille = *end-*top;
         // std::cout << taille << std::endl;

@@ -55,24 +55,24 @@ void execmorse() {
             std::cout << "Donnez une durée caractéristique (par défaut : 0.2s) : "; // Durée d'un bip réglementaire
             float duree;
             std::cin >> duree;
-            std::cout << "Donnez la fréquence de la note d'un bip (par défaut : 800, en Hz) : ";
+            std::cout << "Donnez la fréquence de la note d'un bip (par défaut : 800, en Hz) : "; // Pour la note du bip
             float frequency;
             std::cin >> frequency;
             lineTextToAudio(msg2,samples,top,duree,frequency);
             writeAudioFile(samples,top,Audio); // On convertit le message en .wav
             std::cout << "La traduction en morse de '" << msg1 << "' est dans '" << Audio << "'." <<std::endl;
             delete top;
-            delete samples;
+            delete samples; // Libération de mémoire
             break;
         }
         case 4 : {
             std::cout << "Spécifiez le chemin de l'audio d'entrée : ";
             std::string Audio;
             std::cin.ignore();
-            std::getline(std::cin,Audio);
+            std::getline(std::cin,Audio); // On récupère un fichier audio
             std::string msg1;
-            AudioFile<float> audiowav;
-            bool loadedok = audiowav.load(Audio); // On charge le .wav qu'on vient de créer dans soswav
+            AudioFile<float> audiowav; // On crée un nouveau .wav
+            bool loadedok = audiowav.load(Audio); // On charge le .wav qu'on importe dans audiowav
             assert(loadedok);
             std::cout << "Donnez une durée caractéristique (par défaut : 0.2s) : "; // Durée d'un bip réglementaire
             float duree;
@@ -83,7 +83,7 @@ void execmorse() {
                 samples -> push_back(audiowav.samples[0][i]); // samples sera la liste des samples de audiowav
             }
             msg1 = AudioToText(samples,duree);
-            std::string msg2 = decode_msg(msg1);
+            std::string msg2 = decode_msg(msg1); // Et on décode le message final
             std::cout << "La traduction en français de l'audio '" << Audio << "' est '" << msg2 << "'." <<std::endl;
             delete samples;
             break;
@@ -108,7 +108,7 @@ void execmorse() {
                     std::string S;
                     S += toupper(lignefr.at(lignefr.size()-1));
                     if(mapmorse.find(S) == mapmorse.end()){
-                        lignefr.erase(lignefr.size()-1);                    
+                        lignefr.erase(lignefr.size()-1);       // On supprime ce caractère de fin si non encodable
                     }
                     std::string lignemorse;
                     if(lignefr != ""){
@@ -238,7 +238,7 @@ void execmorse() {
             lignemorse2 = AudioToText(samples2,duree); 
             if(lignemorse2.size() == 0){
                 std::string lignefr2;
-                FluxFr2 << lignefr2 << std::endl;
+                FluxFr2 << lignefr2 << std::endl; // Si la ligne est vide, rien à décoder !
             }
             else {
                 std::string s;
@@ -246,18 +246,18 @@ void execmorse() {
                 std::string letter = "";
                 for(std::map<std::string,std::string>::iterator it = mapmorse.begin();it != mapmorse.end();it++){
                     if(it->second == s){
-                        letter = it->first;
+                        letter = it->first; // On regarde ce qu'est le dernier caractère
                     }   
                 }
                 if(letter == ""){
-                    lignemorse2.erase(lignemorse2.size()-1);                     
+                    lignemorse2.erase(lignemorse2.size()-1);   // Si le dernier caractère n'est pas décodable, on l'enlève               
                 }
                 std::string lignefr2;
                 if(lignemorse2 != ""){
                     lignefr2 = decode_msg(lignemorse2);
                 }
                 // std::cout << "'" << lignefr2 << "' traduit '" << lignemorse2 << "'" << std::endl;
-                FluxFr2 << lignefr2 << std::endl;
+                FluxFr2 << lignefr2 << std::endl; // On rajoute la ligne dans le fichier
             }
             std::cout << "Votre fichier audio '" << AudioMorse2 <<"' est traduit en français dans '" << FichierFr2 << "'." << std::endl;
             break;
