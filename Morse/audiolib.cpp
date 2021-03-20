@@ -8,6 +8,7 @@
 //=======================================================================
 
 //=======================================================================    
+// vr: exemple de passage par référence et pas de new
 void ajouteBip(std::vector<float>* samples, int* top, float duree, float frequency){   
     //---------------------------------------------------------------
     // Create some variables to help us generate a sine wave   
@@ -21,6 +22,7 @@ void ajouteBip(std::vector<float>* samples, int* top, float duree, float frequen
     *top = end;
 }
 
+// vr: référence
 void ajouteSilence(std::vector<float>* samples, int* top, float duree, float frequency){
     //---------------------------------------------------------------
     // Create some variables to help us generate a sine wave       
@@ -78,12 +80,19 @@ void lineTextToAudio(std::string morseline,std::vector<float>* samples, int* top
     }
 }
 
-int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, std::string* morseline) {
+int decodeSilence(std::vector<float>* samples,
+		  float duree,
+		  unsigned int* top,
+		  std::string& morseline) { // vr: on passe par référence un objet de la pile
     int rate = 44100; // Le nombre de samples par seconde
     int unit = floor(rate*duree); // Le nombre de samples par unité
     unsigned int unit_bas = floor(unit*0.9f);        
     unsigned int unit_haut = floor(unit*1.1f); // Pour créer une marge d'acceptation
-    unsigned int* end = new unsigned int;
+    // vr: tu n'as pas besoin de mettre end en mémoire dynamique, tu ne passes à des fonctions appelées par cette fonction donc un end dans la pile fera l'affaire et tu le passes par adresse (ça évite de manipuler le tas qui est plus cher que la pile)
+    
+    // vr:    unsigned int* end = new unsigned int;
+    unsigned int value = 0;
+    unsigned int* end = &value;
     float valsuite = samples -> at(*top+1); // On regarde si c'est aussi un non nul, pour déceler une portion de sinus
     if(valsuite != 0) {
         *top += 1;
@@ -97,44 +106,48 @@ int decodeSilence(std::vector<float>* samples, float duree, unsigned int* top, s
         unsigned int taille = *end-*top;
         // std::cout << "Le silence est de taille : " << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
-            *morseline += "";
+            morseline += "";
             *top = *end;
-            delete end;
+	    // vr: delete end;
             return *top; // Un espace entre deux caractères morse
         }
         if(3*unit_bas <= taille && taille <= 3*unit_haut) {
-            *morseline += " ";
+            morseline += " ";
             *top = *end;
-            delete end;
+	    // vr: delete end;
             return *top; // Un espace entre deux lettres morse
         }
         if(7*unit_bas <= taille && taille <= 7*unit_haut) {
-            *morseline += " / ";
+            morseline += " / ";
             *top = *end;
             return *top; // Un espace entre deux mots morse
         }
         if(taille > 7*unit_haut) {
-            *morseline += " / -..-. / ";
+             morseline += " / -..-. / ";
             *top = *end;
-            delete end;
+            // vr: delete end;
             return *top; // Un saut à la ligne (ici un /)
         }
         else {
-            *morseline += "";
+            morseline += "";
             *top = *end;
-            delete end;
+            // vr: delete end;
             return *top; // Le cas où rien ne se passe
         }
     }
     return *top;
 }
 
-int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::string* morseline) {
+int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::string& morseline) {
     int rate = 44100;
     int unit = floor(rate*duree);
     float unit_bas = floor(unit*0.9f);        
     float unit_haut = floor(unit*1.1f);
-    unsigned int* end = new unsigned int;
+
+    // vr: idem ne mets rien en mémoire dynamique (tas)
+    // vr:    unsigned int* end = new unsigned int;
+    unsigned int value = 0;
+    unsigned int* end = &value;
     float valsuite = samples -> at(*top+1);
     if(valsuite == 0) {
         *top += 1;
@@ -148,21 +161,21 @@ int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::
         unsigned int taille = *end-*top;
         // std::cout << taille << std::endl;
         if(unit_bas <= taille && taille <= unit_haut) {
-            *morseline += ".";
+            morseline += ".";
             *top = *end; // Une unité simple morse
-            delete end;
+	    // vr: delete end;
             return *top;
         }
         if(3*unit_bas <= taille && taille <= 3*unit_haut) {
-            *morseline += "-";
+            morseline += "-";
             *top = *end; // Une unité longue morse
-            delete end;
+            // vr: delete end;
             return *top;
         }
         else {
-            *morseline += "";
+            morseline += "";
             *top = *end;
-            delete end;
+            // vr: delete end;
             return *top; 
         }
     }
@@ -170,9 +183,11 @@ int decodeBip(std::vector<float>* samples, float duree, unsigned int* top, std::
 }
 
 std::string AudioToText(std::vector<float>* samples, float duree) {
-    std::string* morseline = new std::string;
+  // vr: idem ne mets pas morseline dans le tas laisse la dans la pile
+  // vr:     std::string* morseline = new std::string;
+  std::string morseline;
     if(samples -> size() == 0){
-        *morseline = ""; // Pas de samples, pas de string
+        morseline = ""; // Pas de samples, pas de string
     }
     else {
         unsigned int* top = new unsigned int;
@@ -181,15 +196,16 @@ std::string AudioToText(std::vector<float>* samples, float duree) {
             float val = samples -> at(i);
             if(val == 0) {
                 i = decodeSilence(samples,duree,top,morseline); // On regarde si c'est bien un silence et on le décode
-                // std::cout << *morseline << ", " << i << std::endl;    
+                // std::cout << morseline << ", " << i << std::endl;    
             }
             if(val != 0) {
                 i = decodeBip(samples,duree,top,morseline); // Idem avec un bip
-                // std::cout << *morseline << ", " << i << std::endl;
+                // std::cout << morseline << ", " << i << std::endl;
             }
         }
-        delete top;
+        // vr: delete top;
     }
-    return *morseline; // La ligne décodée est renvoyée
-    delete morseline;
+    return morseline; // La ligne décodée est renvoyée
+    // vr: un delete après un return n'est jamais atteint
+    // vr: delete morseline;
 }

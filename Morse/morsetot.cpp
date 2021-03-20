@@ -45,6 +45,8 @@ std::map<std::string,std::string> mapmorse = {
 std::string encode_lettre(std::string s){
     std::string S;
     S += toupper(s.at(0));
+    // vr: même problème
+    /*
     try{
         if(mapmorse.find(S) == mapmorse.end()){
             throw "ERREUR : cette lettre n'est pas codée !";
@@ -55,6 +57,11 @@ std::string encode_lettre(std::string s){
         std::cerr << chaine;
     }
     return "";
+    */
+    if (mapmorse.find(S) == mapmorse.end()){
+      throw "ERREUR : cette lettre n'est pas codée !";
+    }
+    return mapmorse[S];
 }
 
 std::string encode_mot(std::string mot){

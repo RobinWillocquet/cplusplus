@@ -6,6 +6,16 @@
 #include "audiolib.h"
 #include "AudioFile.h"
 
+// vr: cette fonction execmorse doit être découpée en plusieurs fonctions suivant les cas traités et ces fonctions mises dans morse.h (dans une classe)
+
+// vr: pourquoi redemander dans le cas 8 la durée caractéristique, il faut avoir la même que la durée à la création du fichier wav, sinon le programme ne soit plus traduire 
+
+
+// vr: ne mets pas tous ces new et delete, mets tes variables dans la pile et passe les par référence
+
+// vr: INDIRECTLY LOST: 4,194,304 bytes in 1 blocks parce que tu ne détruis pas samples2 ! donc évite les new ! surtout qu'il faut faire les delete... et en plus c'est plus long en accès mémoire
+
+// vr: il te reste definitely lost: 4 bytes in 1 blocks à chercher
 void execmorse() {
     std::cout << "Bienvenue dans le programme de conversion Morse-Français !" << std::endl << "Que souhaitez vous faire ?" << std::endl;
     std::cout << "  1) Traduire un message du français vers le morse" << std::endl;
@@ -28,9 +38,6 @@ void execmorse() {
             std::cout << "La traduction en morse de '" << msg1 << "' est '" << msg2 << "' !" <<std::endl;
             break;
         }
-        default :
-            std::cout << "Entrez un nombre valide !" << std::endl;
-            break;
         case 2 : {
             std::cout << "Entrez votre message en morse : ";
             std::string msg1;
@@ -49,6 +56,7 @@ void execmorse() {
             std::cout << "Spécifiez le chemin de l'audio de sortie : ";
             std::string Audio;
             std::getline(std::cin,Audio); // Nom du fichier wav de sortie
+	    // vr: ne pas faire de new
             std::vector<float>* samples = new std::vector<float>;
             int* top = new int;
             *top = 0;
@@ -214,7 +222,8 @@ void execmorse() {
             std::cout << "Votre fichier '" << FichierFr <<"' est traduit en audio morse dans '" << AudioMorse << "'." << std::endl;
             break;
         }
-        case 8 : { 
+        case 8 : {
+	  // vr: sépare ton code: fais des fonctions 
             std::cout << "Spécifiez le chemin du fichier audio à traduire : ";
             std::string AudioMorse2;
             std::cin.ignore();
@@ -235,7 +244,9 @@ void execmorse() {
                 samples2 -> push_back(audiowav.samples[0][i]); // samples2 sera la liste des samples ici
             }
             std::string lignemorse2;
-            lignemorse2 = AudioToText(samples2,duree); 
+	    lignemorse2 = AudioToText(samples2,duree);
+            // vr: je rajoute le delete
+	    delete samples2;
             if(lignemorse2.size() == 0){
                 std::string lignefr2;
                 FluxFr2 << lignefr2 << std::endl; // Si la ligne est vide, rien à décoder !
@@ -262,6 +273,9 @@ void execmorse() {
             std::cout << "Votre fichier audio '" << AudioMorse2 <<"' est traduit en français dans '" << FichierFr2 << "'." << std::endl;
             break;
         }
+    default :
+      std::cout << "Entrez un nombre valide !" << std::endl;
+      break;
     }
 } 
 

@@ -2,6 +2,8 @@ CXX=g++
 CXXFLAGS=-Wall -ggdb
 RM=rm -f
 
+all: testmorse testaudio progmorse
+
 testmorse : testmorse.o morse.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
@@ -15,7 +17,7 @@ progmorse : progmorse.o morse.o audiolib.o
 %.o:%.cpp; $(CXX) $(CXXFLAGS) -o $@ -c $<
 testmorse.o : testmorse.cpp morse.h
 testaudio.o : testaudio.cpp audiolib.h AudioFile.h
-progmorse.o : progmorse.cpp morse.h
+progmorse.o : progmorse.cpp morse.h audiolib.h AudioFile.h
 morse.o : morse.cpp morse.h
 audiolib.o : audiolib.cpp audiolib.h AudioFile.h
 

@@ -1,0 +1,35 @@
+audiolib.cpp:// vr: exemple de passage par référence et pas de new
+audiolib.cpp:// vr: référence
+audiolib.cpp:		  std::string& morseline) { // vr: on passe par référence un objet de la pile
+audiolib.cpp:    // vr: tu n'as pas besoin de mettre end en mémoire dynamique, tu ne passes à des fonctions appelées par cette fonction donc un end dans la pile fera l'affaire et tu le passes par adresse (ça évite de manipuler le tas qui est plus cher que la pile)
+audiolib.cpp:    // vr:    unsigned int* end = new unsigned int;
+audiolib.cpp:	    // vr: delete end;
+audiolib.cpp:	    // vr: delete end;
+audiolib.cpp:            // vr: delete end;
+audiolib.cpp:            // vr: delete end;
+audiolib.cpp:    // vr: idem ne mets rien en mémoire dynamique (tas)
+audiolib.cpp:    // vr:    unsigned int* end = new unsigned int;
+audiolib.cpp:	    // vr: delete end;
+audiolib.cpp:            // vr: delete end;
+audiolib.cpp:            // vr: delete end;
+audiolib.cpp:  // vr: idem ne mets pas morseline dans le tas laisse la dans la pile
+audiolib.cpp:  // vr:     std::string* morseline = new std::string;
+audiolib.cpp:        // vr: delete top;
+audiolib.cpp:    // vr: un delete après un return n'est jamais atteint
+audiolib.cpp:    // vr: delete morseline;
+audiolib.h:// vr: référence
+audiolib.h:// vr: référence
+morse.cpp:    // vr: un peu compliqué tu lances une exception que tu rattrapes tout de suite ! soit tu lances une exception à la fonction appelante qui t'a passé un string s malformée soit tu affiches un message d'erreur et tu retournes "" mais ne fais pas les deux
+morse.cpp:      throw "ERREUR : cette lettre n'est pas codée !"; // vr: j'arrête la traduction
+morse.cpp:    // vr: pareil soit tu affiches un message soit tu lances une exception afficher un message en lancant une exception n'a pas de sens !
+morse.cpp:// vr: à chaque fois que tu appelles cette fonction tu copies son argument, est-ce utile ?
+morsetot.cpp:    // vr: même problème
+progmorse.cpp:// vr: cette fonction execmorse doit être découpée en plusieurs fonctions suivant les cas traités et ces fonctions mises dans morse.h (dans une classe)
+progmorse.cpp:// vr: pourquoi redemander dans le cas 8 la durée caractéristique, il faut avoir la même que la durée à la création du fichier wav, sinon le programme ne soit plus traduire 
+progmorse.cpp:// vr: ne mets pas tous ces new et delete, mets tes variables dans la pile et passe les par référence
+progmorse.cpp:// vr: INDIRECTLY LOST: 4,194,304 bytes in 1 blocks parce que tu ne détruis pas samples2 ! donc évite les new ! surtout qu'il faut faire les delete... et en plus c'est plus long en accès mémoire
+progmorse.cpp:// vr: il te reste definitely lost: 4 bytes in 1 blocks à chercher
+progmorse.cpp:	    // vr: ne pas faire de new
+progmorse.cpp:	  // vr: sépare ton code: fais des fonctions 
+progmorse.cpp:            // vr: je rajoute le delete
+testaudio.cpp:  std::vector<float>* samples = new std::vector<float>; // vr: pas de new

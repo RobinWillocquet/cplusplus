@@ -27,7 +27,7 @@ void SOS(std::vector<float>* samples,int* top,float frequency){ // On crée une 
 int main() {
     //---------------------------------------------------------------
     /** Writes a sine wave to an audio file */
-    std::vector<float>* samples = new std::vector<float>;
+  std::vector<float>* samples = new std::vector<float>; // vr: pas de new
     int* top = new int;
     *top = 0;
     SOS(samples,top,800);
